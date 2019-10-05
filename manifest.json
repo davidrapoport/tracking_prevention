@@ -1,0 +1,15 @@
+{
+	"name": "ITP extension",
+	"version": "1.0",
+	"description": "A version of Apple's ITP for Chrome",
+	"permissions": ["activeTab", "declarativeContent", "storage", 
+		"cookies", "http://*/*", "https://*/*", "history"],
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"page_action": {
+		"default_popup": "popup.html"
+	},
+	"manifest_version": 2
+}
