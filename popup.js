@@ -1,7 +1,6 @@
 let triggerDeleteButton = document.getElementById("triggerDeleteButton");
 // Used to console.log to the background page of the chrome extension.
 var bkg = chrome.extension.getBackgroundPage();
-
 var dryRun = false;
 
 var onCompletion = function(urlsVisited, cookies, cookiesToKeep, cookiesToDelete) {

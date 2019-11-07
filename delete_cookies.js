@@ -16,7 +16,7 @@ var processVisits = function(url, visitItems, dryRun, onCompletion){
 		if (!parsedUrl.hostname) {
 			continue;
 		}
-		// Strip of www. and any other prefixes.
+		// Strip off www. and any other prefixes.
 		// A visit to www.mail.google.com will count as a visit to google.com
 		shortenedDomain = parsedUrl.hostname.split(".").slice(-2).join(".")
 		// Global set containing all TLDs.
@@ -61,12 +61,12 @@ var deleteCookies = function(dryRun, lookbackWindowStartTimeMicros, onCompletion
   })
 };
 
-var onAllVisitsProcessed = function(dryRun) {
+var onAllVisitsProcessed = function(dryRun, onCompletion) {
 	var cookiesToDelete = [];
 	var cookiesToKeep = [];
 	chrome.cookies.getAll({}, function(cookies){
 		for(let cookie of cookies) {
-			// Strip of www. and any other prefixes.
+			// Strip off www. and any other prefixes.
 			// A visit to www.mail.google.com will count as a visit to google.com
 			shortenedDomain = cookie.domain.split(".").slice(-2).join(".");
 			if(urlsVisited.has(shortenedDomain)) {
@@ -80,14 +80,5 @@ var onAllVisitsProcessed = function(dryRun) {
 			}
 		}
 		onCompletion(urlsVisited, cookies, cookiesToKeep, cookiesToDelete)
-		bkg.console.log("Cookies to DELETE: ");
-		bkg.console.log(cookiesToDelete.join(", "));
-		var numUrls = urlsVisited.size;
-		var numCookies = cookies.length;
-		var numDeleted = cookiesToDelete.length;
-		var numKept = cookiesToKeep.length;
-		bkg.console.log(`From a total of ${numCookies} cookies` +
-				` and ${numUrls} domains you ` +
-				`deleted ${numDeleted} cookies and kept ${numKept} cookies.`)
 	});
 }
