@@ -5,10 +5,24 @@
 </head>
 <body>
 	<div id="runAutoDeleteDiv">
-		<input type="checkbox" name="runAutoDelete"> Automatically delete cookies from 
-		websites I haven't visited in the past month.<br>
+		<h2>Auto-deletion settings</h2>
+		Automatically delete cookies from 
+		websites I haven't visited in the past month. 
+		<input type="checkbox" name="runAutoDelete" id="runAutoDelete"> 
+		<br><br>
+		How many days of web search history
+		to look at to determine which cookies to keep. For example, if the value is 30 then
+		all cookies from websites visited in the past 30 days will be kept.
+		<input type="number" name="lookBackWindowDays" id="lookBackWindowDays">
 	</div>
-	<div id="whitelistedDomainsDiv"></div>
+	<br>
+	<br>
+	<div id="whitelistedDomainsDiv">
+		<h2>Domains to not delete cookies from </h2>
+		<ul id="whitelistedDomains">
+			<li id="whitelistInputLi"><input type="text" id="whitelistInputText"></li>
+		</ul>
+	</div>
     <script type="text/javascript" src="options.js"></script>
 </body>
 </html>

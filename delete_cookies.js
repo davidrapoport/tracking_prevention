@@ -1,3 +1,4 @@
+// TODO: Don't have global variables.
 // Used to console.log to the background page of the chrome extension.
 var bkg = chrome.extension.getBackgroundPage();
 var numRequestsOutstanding = 0;
@@ -6,7 +7,7 @@ var urlsVisited = new Set();
 // We need to get all HistoryItems and then for each HistoryItem
 // we need to call the API to get all visits. This function is a 
 // callback for the API call.
-var processVisits = function(url, visitItems, dryRun, onCompletion){
+var processVisits = function(url, visitItems, dryRun, domainDoNotDeleteList, onCompletion){
 	for (let visitItem of visitItems) {
 		// Do not take URLs which the user did not actively navigate to.
 		if (visitItem.transition != 'typed' && visitItem.transition != 'link') {
@@ -23,19 +24,21 @@ var processVisits = function(url, visitItems, dryRun, onCompletion){
 		urlsVisited.add(shortenedDomain);
 	}
 	if(!--numRequestsOutstanding) {
-		onAllVisitsProcessed(dryRun, onCompletion);
+		onAllVisitsProcessed(dryRun, domainDoNotDeleteList, onCompletion);
 	}
 }
 
 // dryRun: A boolean indicating whether or not to delete the cookies.
 // lookbackWindowStartTimeMicros: The start time for the history search. Entries in the history
 // 		before this timestamp will not be counted as visited.
+// domainDoNotDeleteList: An array of domains to not delete cookies from.
 // onCompletion: A callback function that takes params
 // 		urlsVisited, cookies, cookiesToKeep, cookiesToDelete
 //		where cookiesToKeep and cookiesToDelete are arrays of strings, urlsVisited is a Set of strings
 //		and cookies is an array of Cookies.
-var deleteCookies = function(dryRun, lookbackWindowStartTimeMicros, onCompletion) {
+var deleteCookies = function(dryRun, lookbackWindowStartTimeMicros, domainDoNotDeleteList, onCompletion) {
   bkg.console.log("Looking through history");
+  bkg.console.log("Ignoring the following domains: " + domainDoNotDeleteList);
   chrome.history.search({
   	'text': '',
   	'startTime': lookbackWindowStartTimeMicros,
@@ -48,7 +51,7 @@ var deleteCookies = function(dryRun, lookbackWindowStartTimeMicros, onCompletion
   		    // We need the url of the visited item to process the visit.
   		    // Use a closure to bind the  url into the callback's args.
   		    return function(visitItems) {
-  		      processVisits(url, visitItems, dryRun, onCompletion);
+  		      processVisits(url, visitItems, dryRun, domainDoNotDeleteList, onCompletion);
   		    };
   		  };
   		  chrome.history.getVisits({"url": url}, processVisitsWithUrl(url));
@@ -61,15 +64,16 @@ var deleteCookies = function(dryRun, lookbackWindowStartTimeMicros, onCompletion
   })
 };
 
-var onAllVisitsProcessed = function(dryRun, onCompletion) {
+var onAllVisitsProcessed = function(dryRun, domainDoNotDeleteList, onCompletion) {
 	var cookiesToDelete = [];
 	var cookiesToKeep = [];
+	let domainDoNotDeleteSet = new Set(domainDoNotDeleteList);
 	chrome.cookies.getAll({}, function(cookies){
 		for(let cookie of cookies) {
 			// Strip off www. and any other prefixes.
 			// A visit to www.mail.google.com will count as a visit to google.com
 			shortenedDomain = cookie.domain.split(".").slice(-2).join(".");
-			if(urlsVisited.has(shortenedDomain)) {
+			if(urlsVisited.has(shortenedDomain) || domainDoNotDeleteSet.has(shortenedDomain)) {
 				cookiesToKeep.push(shortenedDomain)
 			} else {
 				cookiesToDelete.push(shortenedDomain);

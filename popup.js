@@ -26,9 +26,11 @@ var updateUIWithCompletionStats = function(numUrls, numCookies, numDeleted, numK
 };
 
 triggerDeleteButton.onclick = function(element) {
-	chrome.storage.sync.get('lookbackWindowInDays', function(data){
-		let kMicroSecondsInLookback = 1000 * 60 * 60 * 24 * Math.max(0.5, data.lookbackWindowInDays);
-		var lookbackWindowStartTimeMicros = (new Date).getTime() - kMicroSecondsInLookback;
-		deleteCookies(dryRun, lookbackWindowStartTimeMicros, onCompletion);
+	chrome.storage.sync.get('domainDoNotDeleteList', function(whitelist){
+		chrome.storage.sync.get('lookbackWindowInDays', function(lookbackData){
+			let kMicroSecondsInLookback = 1000 * 60 * 60 * 24 * Math.max(0.5, lookbackData.lookbackWindowInDays);
+			var lookbackWindowStartTimeMicros = (new Date).getTime() - kMicroSecondsInLookback;
+			deleteCookies(dryRun, lookbackWindowStartTimeMicros, whitelist.domainDoNotDeleteList, onCompletion);
+		});
 	});
 };
