@@ -1,7 +1,7 @@
 {
-	"name": "ITP extension",
+	"name": "Useless Cookie Deleter",
 	"version": "1.0",
-	"description": "A version of Apple's ITP for Chrome",
+	"description": "Deletes old cookies from sites you haven't visited recently",
 	"permissions": ["activeTab", "declarativeContent", "storage", 
 		"cookies", "http://*/*", "https://*/*", "history","alarms"],
 	"background": {
