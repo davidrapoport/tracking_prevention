@@ -5,7 +5,8 @@ var dryRun = false;
 
 var onCompletion = function(urlsVisited, cookies, cookiesToKeep, cookiesToDelete) {
 		bkg.console.log("Cookies to DELETE:");
-		bkg.console.log(cookiesToDelete.join(", "));
+		// Convert to a set to de-dupe.
+		bkg.console.log(Array.from(new Set(cookiesToDelete)).join(", "));
 		bkg.console.log("\n\n");
 		numUrls = urlsVisited.size;
 		numCookies = cookies.length;

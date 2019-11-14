@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(function() {
 // Do not actually delete cookies on a dry run.
 var dry_run = false;
 
-chrome.alarms.create("cookieDeleteAlarm", {"periodInMinutes": 0.1})
+chrome.alarms.create("cookieDeleteAlarm", {"periodInMinutes": 10})
 chrome.alarms.onAlarm.addListener(function(alarm) {
 	if(alarm.name != "cookieDeleteAlarm") {
 		return;
@@ -26,7 +26,8 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 					deleteCookies(dry_run, lookbackWindowStartTime, whitelistData.domainDoNotDeleteList, 
 					  function(urlsVisited, cookies, cookiesToKeep, cookiesToDelete){
 						console.log("Cookies to DELETE: ");
-						console.log(cookiesToDelete.join(", "));
+						// Turn into a set to de-dupe.
+						console.log(Array.from(new Set(cookiesToDelete)).join(", "));
 						var numUrls = urlsVisited.size;
 						var numCookies = cookies.length;
 						var numDeleted = cookiesToDelete.length;

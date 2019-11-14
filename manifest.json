@@ -10,7 +10,21 @@
 	},
 	"options_page": "options.html",
 	"page_action": {
-		"default_popup": "popup.html"
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "imgs/shield16.png",
+			"32": "imgs/shield32.png",
+			"64": "imgs/shield64.png",
+			"128": "imgs/shield128.png"
+		}
+	},
+	"icons": {
+		"16": "imgs/shield16.png",
+		"32": "imgs/shield32.png",
+		"64": "imgs/shield64.png",
+		"128": "imgs/shield128.png"
 	},
 	"manifest_version": 2
 }
+// Icons from
+//<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
