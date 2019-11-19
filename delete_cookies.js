@@ -1,6 +1,4 @@
 // TODO: Don't have global variables.
-// Used to console.log to the background page of the chrome extension.
-var bkg = chrome.extension.getBackgroundPage();
 var numRequestsOutstanding = 0;
 var urlsVisited = new Set();
 
@@ -37,6 +35,8 @@ var processVisits = function(url, visitItems, dryRun, domainDoNotDeleteList, onC
 //		where cookiesToKeep and cookiesToDelete are arrays of strings, urlsVisited is a Set of strings
 //		and cookies is an array of Cookies.
 var deleteCookies = function(dryRun, lookbackWindowStartTimeMicros, domainDoNotDeleteList, onCompletion) {
+  // Used to console.log to the background page of the chrome extension.
+  let bkg = chrome.extension.getBackgroundPage();
   bkg.console.log("Looking through history");
   bkg.console.log("Ignoring the following domains: " + domainDoNotDeleteList);
   chrome.history.search({

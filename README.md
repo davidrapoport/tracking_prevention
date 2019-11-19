@@ -1,4 +1,4 @@
-# Tracking Prevention
+# Cookie Monster
 A Chrome extension meant to increase your privacy online.
 When enabled, it deletes cookies that you have not visited in the past N days (N is configurable).
 For example, has anyone ever visited googleads.doubleclick.net? So why should they have a cookie on your 
